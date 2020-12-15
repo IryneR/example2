@@ -2,6 +2,7 @@
   "key": "atlassian-connect-spring-boot-sample-thymeleaf",
   "baseUrl": "${addon.base-url}",
   "name": "Atlassian Connect Spring Boot Thymeleaf Sample",
+  "scopes": ["read"],
   "authentication": {
     "type": "jwt"
   },
@@ -27,6 +28,12 @@
         },
         "url": "/thymeleaf"
       }
-    ]
+    ],
+      "webhooks": [
+        { "event": "jira:issue_created", "url": "/webhook-received"},
+        { "event": "jira:issue_deleted", "url": "/webhook-received"},
+        { "event": "jira:issue_updated", "url": "/webhook-received"}
+      ]
+
   }
 }

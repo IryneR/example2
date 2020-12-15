@@ -1,2 +1,3 @@
-example2\AddonApplication.class
+example2\dto\IssueDto.class
 example2\ThymeleafController.class
+example2\AddonApplication.class

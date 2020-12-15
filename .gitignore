@@ -1,0 +1,15 @@
+**/application*.properties
+*.iml
+*.log
+.idea/
+.settings/
+.mvn/
+
+build/
+out/
+target/
+.classpath
+.project
+
+mvnw
+mvnw.cmd
