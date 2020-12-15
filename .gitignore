@@ -7,7 +7,7 @@
 
 build/
 out/
-target/
+*/target/
 .classpath
 .project
 

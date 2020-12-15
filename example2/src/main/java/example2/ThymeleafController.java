@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import example2.dto.IssueDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ public class ThymeleafController {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    //@Autowired
     private ObjectMapper mapper = new ObjectMapper();
 
     @GetMapping("/thymeleaf")
