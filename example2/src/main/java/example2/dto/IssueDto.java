@@ -10,9 +10,9 @@ import java.util.Map;
 @JsonAutoDetect
 public class IssueDto {
     private String issueKey;
-    private String issueTypeName;
+    private String issueType;
     private String projectKey;
-    private String creatorDisplayName;
+    private String creator;
 
     public String getIssueKey() {
         return issueKey;
@@ -24,17 +24,17 @@ public class IssueDto {
     }
 
     public String getIssueTypeName() {
-        return issueTypeName;
+        return issueType;
     }
 
     @JsonProperty("fields")
     public void setIssueFields(Map<String, Object> fields) {
         Map<String, Object> issueType = (Map<String, Object>) fields.get("issuetype");
-        this.issueTypeName = (String) issueType.get("name");
+        this.issueType = (String) issueType.get("name");
         Map<String, Object> project = (Map<String, Object>) fields.get("project");
         this.projectKey = (String) project.get("name");
         Map<String, Object> creator = (Map<String, Object>) fields.get("creator");
-        this.creatorDisplayName = (String) creator.get("displayName");
+        this.creator = (String) creator.get("displayName");
     }
 
     public String getProjectKey() {
@@ -42,7 +42,7 @@ public class IssueDto {
     }
 
     public String getCreatorDisplayName() {
-        return creatorDisplayName;
+        return creator;
     }
 
 }
