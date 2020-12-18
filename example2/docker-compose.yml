@@ -1,0 +1,37 @@
+version: "2.3"
+services:
+  jira-cloud-plugin:
+    image: jira-cloud-plugin-2.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db
+  postgres-db:
+    image: postgres:12
+    mem_limit: 2048MB
+    mem_reservation: 1G
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+    ports:
+      - "5555:5432"
+    networks:
+      - pg_pgadmin_network
+    volumes:
+      - db-vol:/var/lib/postgresql/data
+  pgadmin4-demo:
+    image: dpage/pgadmin4
+    mem_limit: 2048MB
+    mem_reservation: 1G
+    environment:
+      PGADMIN_DEFAULT_EMAIL: irishka2991@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: user
+    ports:
+      - "7777:80"
+    networks:
+      - pg_pgadmin_network
+networks:
+  pg_pgadmin_network:
+    driver: bridge
+volumes:
+  db-vol:
