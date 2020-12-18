@@ -1,11 +1,5 @@
 version: "2.3"
 services:
-  jira-cloud-plugin:
-    image: jira-cloud-plugin-2.0:3.0
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres-db
   postgres-db:
     image: postgres:12
     mem_limit: 2048MB
