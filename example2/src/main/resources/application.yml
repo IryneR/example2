@@ -1,6 +1,7 @@
 spring.jpa.hibernate.ddl-auto: update
-spring.datasource.url: jdbc:hsqldb:file:addon-db # Use a file-based backing store for HSQL
-
+spring.datasource.url: jdbc:postgresql://172.21.0.2:5432/jira-cloud-plugin-db
+spring.datasource.username: user
+spring.datasource.password: user
 addon.base-url:  https://f45ac20f8549.ngrok.io
 
 logging.level.com.atlassian.connect.spring: DEBUG

@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Table(name = "issue_created")
 public class IssueEntity {
     @Id
+    @Column(name = "issue_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer issueId;
 
