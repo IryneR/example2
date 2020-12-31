@@ -13,3 +13,5 @@ example2/target/*
 
 mvnw
 mvnw.cmd
+/.idea/
+/target/
