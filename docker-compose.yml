@@ -1,13 +1,21 @@
 version: "2.3"
 services:
-  #jira-cloud-plugin:
-   # image: jira-cloud-plugin-2.0:5.0
-   # ports:
-    #  - "8080:8080"
-   # depends_on:
-   #   - postgres-db
-   # networks:
-   #   - pg_pgadmin_network
+  jira-cloud-plugin:
+    image: jira-cloud-plugin-2.0:10.0
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db
+    networks:
+      - pg_pgadmin_network
+  python-script:
+    image: python-script:1.0
+    ports:
+      - "5000:5000"
+    #depends_on:
+     # - jira-cloud-plugin
+    networks:
+      - pg_pgadmin_network
   postgres-db:
     image: postgres:12
     mem_limit: 2048MB
