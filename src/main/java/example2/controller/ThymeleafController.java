@@ -31,15 +31,8 @@ public class ThymeleafController {
     @ResponseBody
     public String onWebhookReceived(@RequestBody Map<String, Object> request) throws JsonProcessingException {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        System.out.println(String.format("Received webhook (%s) from Jira for webhook ids: %s\n\n%s",
-                request.get("webhookEvent"),
-                request.get("matchedWebhookIds"),
-                request.containsKey("issue") ? GSON.toJson(request.get("issue")) : ""));
-
         IssueDto issueDto = mapper.readValue(GSON.toJson(request.get("issue")), IssueDto.class);
         Integer issueId = issueService.createIssue(issueDto);
-        System.out.println(issueDto);
-        System.out.println(issueId);
         return "{\"result\": \"ok\"}";
     }
 }

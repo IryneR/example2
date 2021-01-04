@@ -1,9 +1,9 @@
 spring.jpa.hibernate.ddl-auto: update
-#spring.datasource.url: jdbc:postgresql://localhost:5555/jira-cloud-plugin-db to connect from the app which is not inside the container
-spring.datasource.url: jdbc:postgresql://postgres-db:5432/jira-cloud-plugin-db
+spring.datasource.url: jdbc:postgresql://localhost:5555/jira-cloud-plugin-db #to connect from the app which is not inside the container
+#spring.datasource.url: jdbc:postgresql://postgres-db:5432/jira-cloud-plugin-db
 spring.datasource.username: user
 spring.datasource.password: user
-addon.base-url:  https://f45ac20f8549.ngrok.io
+addon.base-url:  https://dd58749539ba.ngrok.io
 
 logging.level.com.atlassian.connect.spring: DEBUG
 
