@@ -1,0 +1,5 @@
+#docker commands to run whole app in docker (java _python microservice)
+
+PS D:\projects\example2> docker build --tag jira-cloud-plugin-2.0:12.0 .
+PS D:\projects\python-service> docker build --tag python-script:1.0 .
+PS D:\projects\example2> docker-compose up -d
