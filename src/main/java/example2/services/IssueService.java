@@ -28,11 +28,11 @@ public class IssueService {
         issueEntity.setIssueType(issueDto.getIssueTypeName());
         issueEntity.setProjectKey(issueDto.getProjectKey());
         issueEntity.setCreator(issueDto.getCreatorDisplayName());
-        issueEntity.setHash(getHash());
+        //issueEntity.setHash(getHash());
+        issueEntity.setHash(getHashForIssue(issueDto));
 
         issueEntity = issueRepository.save(issueEntity);
         return issueEntity.getIssueId();
-
     }
 
     public String getHash() {
@@ -42,8 +42,14 @@ public class IssueService {
         ResponseEntity<JiraHash> response
                 = restTemplate.getForEntity(hashUrl, JiraHash.class);
         return response.getBody().getHash();
-
-
     }
+
+    public String getHashForIssue(IssueDto issueDto) {
+        RestTemplate restTemplate = new RestTemplate();
+        String hashUrl = hashServiceUrl;
+        JiraHash response = restTemplate.postForObject(hashUrl, issueDto, JiraHash.class);
+        return response.getHash();
+    }
+
 
 }
