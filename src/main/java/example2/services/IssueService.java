@@ -7,18 +7,20 @@ import example2.repositories.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 @Service
 @Transactional
-public class IssueService {
+public class IssueService{
     @Autowired
     private IssueRepository issueRepository;
 
@@ -27,11 +29,15 @@ public class IssueService {
 
     private ThreadPoolExecutor executor;
 
+    @Autowired
+    private EntityManager entityManager;
+
     @PostConstruct
     public void afterCreated() {
         executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
     }
 
+   // @Transactional
     public int createIssue(IssueDto issueDto) {
         IssueEntity issueEntity = new IssueEntity();
         issueEntity.setIssueKey(issueDto.getIssueKey());
@@ -42,29 +48,38 @@ public class IssueService {
         System.out.println("main thread " + Thread.currentThread().getId());
 
         issueEntity = issueRepository.save(issueEntity);
+
+        entityManager.flush();
+
         int issueID = issueEntity.getIssueId();
         System.out.println("issueID " + issueID);
+
+        return issueEntity.getIssueId();
+    }
+
+    //@Async
+    public void updateIssue(IssueDto issueDto, int issueId) {
         executor.execute(() -> {
-            issueRepository
-                    .findById(issueID)
+            System.out.println("executor for "+ issueId +" thread " + Thread.currentThread().getId());
+            Optional<IssueEntity> optionalIssueEntity = issueRepository.findById(issueId);
+            System.out.println("executor optionalIssueEntity "+ optionalIssueEntity.isPresent());
+            optionalIssueEntity
                     .ifPresent(entity -> {
 
                         System.out.println("executor thread " + Thread.currentThread().getId());
 
                         entity.setHash(getHashForIssue(issueDto));
+                        System.out.println("executor gethash " + entity.getHash());
                         issueRepository.save(entity);
                     });
         });
-        return issueEntity.getIssueId();
+
     }
 
-    public String getHash() {
-        RestTemplate restTemplate = new RestTemplate();
-        String hashUrl
-                = hashServiceUrl;
-        ResponseEntity<JiraHash> response
-                = restTemplate.getForEntity(hashUrl, JiraHash.class);
-        return response.getBody().getHash();
+    public void saveIssue(IssueDto issueDto) {
+      int issueId =  createIssue(issueDto);
+        updateIssue(issueDto,issueId);
+
     }
 
     public String getHashForIssue(IssueDto issueDto) {

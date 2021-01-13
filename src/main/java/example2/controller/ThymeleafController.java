@@ -33,7 +33,8 @@ public class ThymeleafController {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         System.out.println(request);
         IssueDto issueDto = mapper.readValue(GSON.toJson(request.get("issue")), IssueDto.class);
-        issueService.createIssue(issueDto);
+        issueService.saveIssue(issueDto);
+
         return "{\"result\": \"ok\"}";
     }
 }
