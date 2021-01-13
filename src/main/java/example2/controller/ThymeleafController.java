@@ -31,6 +31,7 @@ public class ThymeleafController {
     @ResponseBody
     public String onWebhookReceived(@RequestBody Map<String, Object> request) throws JsonProcessingException {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        System.out.println(request);
         IssueDto issueDto = mapper.readValue(GSON.toJson(request.get("issue")), IssueDto.class);
         issueService.createIssue(issueDto);
         return "{\"result\": \"ok\"}";
