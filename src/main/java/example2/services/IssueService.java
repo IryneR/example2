@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Service
 @Transactional
@@ -22,16 +25,36 @@ public class IssueService {
     @Value("${application.hash-service-url}")
     private String hashServiceUrl;
 
+    private ThreadPoolExecutor executor;
+
+    @PostConstruct
+    public void afterCreated() {
+        executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+    }
+
     public int createIssue(IssueDto issueDto) {
         IssueEntity issueEntity = new IssueEntity();
         issueEntity.setIssueKey(issueDto.getIssueKey());
         issueEntity.setIssueType(issueDto.getIssueTypeName());
         issueEntity.setProjectKey(issueDto.getProjectKey());
         issueEntity.setCreator(issueDto.getCreatorDisplayName());
-        //issueEntity.setHash(getHash());
-        issueEntity.setHash(getHashForIssue(issueDto));
+
+        System.out.println("main thread " + Thread.currentThread().getId());
 
         issueEntity = issueRepository.save(issueEntity);
+        int issueID = issueEntity.getIssueId();
+        System.out.println("issueID " + issueID);
+        executor.execute(() -> {
+            issueRepository
+                    .findById(issueID)
+                    .ifPresent(entity -> {
+
+                        System.out.println("executor thread " + Thread.currentThread().getId());
+
+                        entity.setHash(getHashForIssue(issueDto));
+                        issueRepository.save(entity);
+                    });
+        });
         return issueEntity.getIssueId();
     }
 
