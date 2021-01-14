@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -27,7 +28,8 @@ public class IssueService{
     @Value("${application.hash-service-url}")
     private String hashServiceUrl;
 
-    private ThreadPoolExecutor executor;
+    //private ThreadPoolExecutor executor;
+    private ExecutorService executor;
 
     @Autowired
     private EntityManager entityManager;
@@ -37,7 +39,7 @@ public class IssueService{
         executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
     }
 
-   // @Transactional
+    @Transactional
     public int createIssue(IssueDto issueDto) {
         IssueEntity issueEntity = new IssueEntity();
         issueEntity.setIssueKey(issueDto.getIssueKey());
@@ -57,7 +59,7 @@ public class IssueService{
         return issueEntity.getIssueId();
     }
 
-    //@Async
+    @Async("threadPoolExecutor")
     public void updateIssue(IssueDto issueDto, int issueId) {
         executor.execute(() -> {
             System.out.println("executor for "+ issueId +" thread " + Thread.currentThread().getId());
