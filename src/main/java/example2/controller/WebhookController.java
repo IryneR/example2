@@ -8,18 +8,21 @@ import com.google.gson.GsonBuilder;
 import example2.dto.IssueDto;
 import example2.services.IssueService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @Controller
-public class ThymeleafController {
+public class WebhookController {
+
     @Autowired
     IssueService issueService;
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    //@Autowired
     private ObjectMapper mapper = new ObjectMapper();
 
     @GetMapping("/thymeleaf")
@@ -31,11 +34,10 @@ public class ThymeleafController {
     @ResponseBody
     public String onWebhookReceived(@RequestBody Map<String, Object> request) throws JsonProcessingException {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        System.out.println(request);
         IssueDto issueDto = mapper.readValue(GSON.toJson(request.get("issue")), IssueDto.class);
         int issueId = issueService.createIssue(issueDto);
         issueService.updateIssue(issueDto, issueId);
-
-        return "{\"result\": \"ok\"}";
+        return ResponseEntity.status(HttpStatus.OK).build().toString();
     }
 }
+
